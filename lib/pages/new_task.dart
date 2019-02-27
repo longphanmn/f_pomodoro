@@ -54,24 +54,27 @@ class _NewTaskPageState extends State<NewTaskPage> {
                     padding: const EdgeInsets.only(top: 8, bottom: 8),
                     child: Row(
                       children: <Widget>[
-                        IconButton(
-                            icon: Icon(
-                              Icons.arrow_back,
-                              size: 32,
-                              color: Colors.grey,
-                            ),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            }),
-                        Spacer(),
-                        IconButton(
-                          icon: Icon(
-                            Icons.save,
-                            size: 32.0,
-                            color: Colors.deepOrange,
-                          ),
-                          onPressed: _saveTaskAndClose,
+                        InkWell(
+                          onTap: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: IconButton(
+                              icon: Icon(
+                                Icons.arrow_back,
+                                size: 32,
+                                color: Colors.grey,
+                              )),
                         ),
+                        Spacer(),
+                        InkWell(
+                          onTap: _saveTaskAndClose,
+                          child: IconButton(
+                              icon: Icon(
+                                Icons.save,
+                                size: 32,
+                                color: Colors.deepOrange,
+                              )),
+                        )
                       ],
                     ),
                   ),

@@ -25,7 +25,8 @@ class _HomePageState extends State<HomePage> {
     _streamController = StreamController();
   }
 
-  void _addTask() async {
+  void _addTask(BuildContext context) async {
+
     Task task = await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => NewTaskPage()),
@@ -34,9 +35,12 @@ class _HomePageState extends State<HomePage> {
 
     if (task != null){
       await Manager().addNewTask(task);
+      String taskName = task.title;
       var allTasks = await taskManager.loadAllTasks();
       setState((){
         _streamController.add(allTasks);
+        final snackBar = SnackBar(content: Text('Added: $taskName'));
+        _scaffoldKey.currentState.showSnackBar(snackBar);
       });
     }
   }
@@ -50,7 +54,7 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          _addTask();
+          _addTask(context);
         },
         tooltip: 'Add new task',
         child: Icon(Icons.add),
@@ -99,24 +103,18 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class TaskWidget extends StatefulWidget{
+class TaskWidget extends StatelessWidget{
   TaskWidget({Key key, this.task}) : super(key: key);
-  Task task;
+  final Task task;
 
-  @override
-  _TaskWidgetState createState() => _TaskWidgetState();
-}
-
-class _TaskWidgetState extends State<TaskWidget> {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text(widget.task.title,
+      child: Text(task.title,
         style: TextStyle(
             fontSize: 24
         ),
       ),
-    );;
+    );
   }
-
 }
