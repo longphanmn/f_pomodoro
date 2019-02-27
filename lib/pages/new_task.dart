@@ -10,14 +10,36 @@ class NewTaskPage extends StatefulWidget {
 }
 
 class _NewTaskPageState extends State<NewTaskPage> {
-  TextEditingController _titleController;
+  TextEditingController _titleController, _descriptionController;
 
   int maxTitleLength = 36;
 
-  Task task;
-
   void _saveTaskAndClose() {
+    String title = _titleController.text;
+    String description = _descriptionController.text;
+
+    if(title.trim().isEmpty) {
+      print("Empty");
+      return;
+    }
+
+    Task task = new Task(0, title, description);
+
     Navigator.of(context).pop(task);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _descriptionController = new TextEditingController(text: '');
+    _titleController = new TextEditingController(text: '');
+  }
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _descriptionController.dispose();
+    super.dispose();
   }
 
   @override
@@ -28,7 +50,7 @@ class _NewTaskPageState extends State<NewTaskPage> {
           child: Stack(
             children: <Widget>[
               ListView(
-                shrinkWrap: true,
+                shrinkWrap: false,
                 children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.only(top: 8, bottom: 8),
@@ -36,9 +58,9 @@ class _NewTaskPageState extends State<NewTaskPage> {
                       children: <Widget>[
                         IconButton(
                             icon: Icon(
-                              Icons.navigate_before,
-                              size: 40.0,
-                              color: Colors.black,
+                              Icons.arrow_back,
+                              size: 32,
+                              color: Colors.grey,
                             ),
                             onPressed: () {
                               Navigator.of(context).pop();
@@ -46,13 +68,11 @@ class _NewTaskPageState extends State<NewTaskPage> {
                         Spacer(),
                         IconButton(
                           icon: Icon(
-                            Icons.sync,
+                            Icons.save,
                             size: 32.0,
-                            color: Colors.white70,
+                            color: Colors.deepOrange,
                           ),
-                          onPressed: () {
-
-                          },
+                          onPressed: _saveTaskAndClose,
                         ),
                       ],
                     ),
@@ -69,12 +89,11 @@ class _NewTaskPageState extends State<NewTaskPage> {
                       filled: true,
                       fillColor: Colors.white,
                       border: InputBorder.none,
-                      contentPadding: EdgeInsets.only(left: 16, right: 16, bottom: 8),
+                      contentPadding: EdgeInsets.only(left: 32, right: 32, bottom: 4),
                     ),
                   ),
                   new TextField(
-                    maxLength: maxTitleLength,
-                    controller: _titleController,
+                    controller: _descriptionController,
                     keyboardType: TextInputType.multiline,
                     maxLines: 10,
                     style: TextStyle(
@@ -87,18 +106,10 @@ class _NewTaskPageState extends State<NewTaskPage> {
                       fillColor: Colors.white,
                       border: InputBorder.none,
                       counterText: "",
-                      contentPadding: EdgeInsets.only(left: 16, right: 16, bottom: 8),
+                      contentPadding: EdgeInsets.only(left: 32, right: 32, bottom: 4),
                     ),
                   ),
                 ],
-              ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: MaterialButton(
-                  minWidth: double.maxFinite,
-                  onPressed: _saveTaskAndClose,
-                  child: Text('Save Task'.toUpperCase()),
-                ),
               )
             ],
           ),
