@@ -46,7 +46,7 @@ class DatabaseUtil{
     var id = table.first['id'];
 
     var raw = db.rawInsert(
-        'INSERT Into Task (id, color, title, minutes) VALUES (?,?,?,?)',
+        'INSERT Into Task (id, title, description) VALUES (?,?,?)',
         [id, task.title, task.description]
     );
 
@@ -62,7 +62,6 @@ class DatabaseUtil{
     List<Task> tasks = query.isNotEmpty ?
     query.map((t) => Task.fromMap(t)).toList() : [ ];
 
-    print('Loaded All');
 
     return tasks;
   }

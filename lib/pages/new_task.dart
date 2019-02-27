@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fpomodoro/models/task.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:fpomodoro/utils/manager.dart';
 
 class NewTaskPage extends StatefulWidget {
   NewTaskPage({Key key}) : super(key: key);
@@ -19,13 +20,10 @@ class _NewTaskPageState extends State<NewTaskPage> {
     String description = _descriptionController.text;
 
     if(title.trim().isEmpty) {
-      print("Empty");
       return;
     }
 
-    Task task = new Task(0, title, description);
-
-    Navigator.of(context).pop(task);
+    Navigator.pop(context, new Task(0, title, description));
   }
 
   @override
