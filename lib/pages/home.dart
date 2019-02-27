@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fpomodoro/pages/new_task.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -11,9 +12,10 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
 
   void _addTask() {
-    setState(() {
-
-    });
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => NewTaskPage()),
+    );
   }
 
   @override
