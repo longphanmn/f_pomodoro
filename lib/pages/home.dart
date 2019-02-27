@@ -83,12 +83,7 @@ class _HomePageState extends State<HomePage> {
                   itemBuilder: (BuildContext context, int index) {
                     var item = tasks.elementAt(index);
                     return GestureDetector(
-                      child: new Text(item.title,
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 19.0,
-                          fontWeight: FontWeight.bold
-                        ),
+                      child: new TaskWidget(task: item
                       ),
                       onTap: () {
                         
@@ -102,4 +97,26 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+}
+
+class TaskWidget extends StatefulWidget{
+  TaskWidget({Key key, this.task}) : super(key: key);
+  Task task;
+
+  @override
+  _TaskWidgetState createState() => _TaskWidgetState();
+}
+
+class _TaskWidgetState extends State<TaskWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text(widget.task.title,
+        style: TextStyle(
+            fontSize: 24
+        ),
+      ),
+    );;
+  }
+
 }
