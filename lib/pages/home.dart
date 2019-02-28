@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'package:fpomodoro/pages/new_task.dart';
@@ -16,13 +15,11 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   Manager taskManager = Manager();
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  StreamController<List<Task>> _streamController;
 
   @override
   void initState() {
     super.initState();
     taskManager.loadAllTasks();
-    _streamController = StreamController();
   }
 
   void _addTask(BuildContext context) async {
@@ -35,11 +32,9 @@ class _HomePageState extends State<HomePage> {
 
     if (task != null){
       await Manager().addNewTask(task);
-      String taskName = task.title;
-      var allTasks = await taskManager.loadAllTasks();
+      await taskManager.loadAllTasks();
       setState((){
-        _streamController.add(allTasks);
-        final snackBar = SnackBar(content: Text('Added: $taskName'));
+        final snackBar = SnackBar(content: Text('Added: ${task.title}'));
         _scaffoldKey.currentState.showSnackBar(snackBar);
       });
     }
@@ -109,12 +104,29 @@ class TaskWidget extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text(task.title,
-        style: TextStyle(
-            fontSize: 24
+    return Card(
+      margin: const EdgeInsets.fromLTRB(4, 4, 4, 4),
+      child: Container(
+        height: 56.0,
+        margin: const EdgeInsets.fromLTRB(16, 4, 16, 4),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              task.title,
+              style: TextStyle(
+                fontSize: 24,
+              ),
+            ),
+            Text(
+              task.title,
+              style: TextStyle(
+                fontSize: 18
+              ),
+            ),
+          ],
         ),
-      ),
+    )
     );
   }
 }

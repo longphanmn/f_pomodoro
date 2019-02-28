@@ -13,7 +13,8 @@ class NewTaskPage extends StatefulWidget {
 class _NewTaskPageState extends State<NewTaskPage> {
   TextEditingController _titleController, _descriptionController;
 
-  int maxTitleLength = 36;
+  int maxTitleLength = 24;
+  bool _isSaveButtonVisible = false;
 
   void _saveTaskAndClose() {
     String title = _titleController.text;
@@ -42,8 +43,17 @@ class _NewTaskPageState extends State<NewTaskPage> {
 
   @override
   Widget build(BuildContext context) {
+    final saveButton = InkWell(
+      onTap: _saveTaskAndClose,
+      child: IconButton(
+          icon: Icon(
+            Icons.save,
+            size: 32,
+            color: Theme.of(context).primaryColor,
+          )),
+    );
     return Scaffold(
-        body: Container(
+        body: new Material(
           color: Colors.white,
           child: Stack(
             children: <Widget>[
@@ -66,15 +76,7 @@ class _NewTaskPageState extends State<NewTaskPage> {
                               )),
                         ),
                         Spacer(),
-                        InkWell(
-                          onTap: _saveTaskAndClose,
-                          child: IconButton(
-                              icon: Icon(
-                                Icons.save,
-                                size: 32,
-                                color: Colors.deepOrange,
-                              )),
-                        )
+                        _isSaveButtonVisible ? saveButton : Spacer(),
                       ],
                     ),
                   ),
@@ -92,6 +94,15 @@ class _NewTaskPageState extends State<NewTaskPage> {
                       border: InputBorder.none,
                       contentPadding: EdgeInsets.only(left: 32, right: 32, bottom: 4),
                     ),
+                    onChanged: (text) {
+                      final needSaveButton = _titleController.text.trim().length > 0;
+                      if (_isSaveButtonVisible != needSaveButton){
+                        setState(() {
+                          _isSaveButtonVisible = needSaveButton;
+                        });
+                      }
+
+                    },
                   ),
                   new TextField(
                     controller: _descriptionController,
