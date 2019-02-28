@@ -56,7 +56,7 @@ class _HomePageState extends State<HomePage> {
           return <Widget>[
             SliverAppBar(
               expandedHeight: 80.0,
-              floating: false,
+              floating: true,
               pinned: false,
               flexibleSpace: FlexibleSpaceBar(
                   centerTitle: true,
@@ -75,7 +75,7 @@ class _HomePageState extends State<HomePage> {
             stream: taskManager.tasksData.asStream(),
             initialData: List<Task>(),
             builder: (BuildContext context, AsyncSnapshot<List<Task>> snapshot) {
-              var tasks = snapshot.data;
+              var tasks = snapshot.data.reversed;
 
               if(snapshot.connectionState != ConnectionState.done){
                 return Center(child: CircularProgressIndicator(),);
@@ -91,6 +91,7 @@ class _HomePageState extends State<HomePage> {
                 );
               }else {
                 return ListView.builder(
+                  padding: EdgeInsets.only(top: 0),
                   itemCount: tasks.length,
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
