@@ -45,6 +45,7 @@ class _NewTaskPageState extends State<NewTaskPage> {
   Widget build(BuildContext context) {
     final saveButton = IconButton(
           onPressed: _saveTaskAndClose,
+          tooltip: 'Save task',
           icon: Icon(
             Icons.save,
             size: 32,

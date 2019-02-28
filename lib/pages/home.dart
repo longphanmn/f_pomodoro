@@ -122,32 +122,32 @@ class TaskWidget extends StatelessWidget{
   Widget build(BuildContext context) {
     return Card(
       margin: const EdgeInsets.fromLTRB(4, 4, 4, 4),
-      child: Container(
-        height: 56.0,
-        margin: const EdgeInsets.fromLTRB(16, 4, 16, 4),
-        child: Material(
-          child: InkWell(
-            onTap: (){
+      child: Material(
+        child: InkWell(
+          onTap: (){
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => TimerPage(task: task,)),
               );
-            },
+          },
+          child: Container(
+            height: 56.0,
+            margin: const EdgeInsets.fromLTRB(16, 4, 16, 4),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  task.description,
+                  task.title,
                   style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
+                    fontSize: 22,
+                    fontWeight: FontWeight.normal,
                   ),
                 ),
                 Text(
-                  task.title,
+                  task.description,
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: 17,
                     fontWeight: FontWeight.normal,
                   ),
                 ),
