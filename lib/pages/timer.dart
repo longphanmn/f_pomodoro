@@ -31,19 +31,15 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
   Stopwatch stopwatch = Stopwatch();
   static const delay = Duration(microseconds: 1);
 
-  /// for animation
   var begin = 0.0;
   Animation<double> heightSize;
   AnimationController _controller;
 
-    /// Called each time the time is ticking
   void updateClock(){
-
-    // if time is up, stop the timer
+    
     if(stopwatch.elapsed.inMinutes == minutes){
       if(Navigator.canPop(context)){
-        print('--finished Timer Page--');
-        Navigator.pop(context);
+        Navigator.of(context).pop(getTask());
       }
       return;
     }
@@ -126,7 +122,7 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
           AnimatedBuilder(
             animation: _controller,
             builder: (context, child) {
-              return DemoBody(
+              return WaveAnimationBody(
                   size: size,
                   color: Theme.of(context).primaryColor,
               );
@@ -152,7 +148,9 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
                     size: 32.0,
                     color: Colors.white70,
                   ),
-                  onPressed: _restartCountDown,
+                  onPressed: (){
+                    Navigator.of(context).pop(getTask());
+                  },
                 ),
               ],
             ),
@@ -201,11 +199,9 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
                   child: RoundedButton(text: buttonText),
                   onTap: () {
                     if (stopwatch.isRunning) {
-                      print('--Paused--');
                       stopwatch.stop();
                       _controller.stop(canceled: false);
                     } else {
-                      print('--Running--');
                       begin = 50.0;
                       stopwatch.start();
                       _controller.forward();
@@ -257,23 +253,23 @@ class _RoundedButtonState extends State<RoundedButton>{
   }
 }
 
-class DemoBody extends StatefulWidget {
+class WaveAnimationBody extends StatefulWidget {
   final Size size;
   final int xOffset;
   final int yOffset;
   final Color color;
 
-  DemoBody(
+  WaveAnimationBody(
       {Key key, @required this.size, this.xOffset = 0, this.yOffset = 0, this.color})
       : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return new _DemoBodyState();
+    return new _WaveAnimationBodyState();
   }
 }
 
-class _DemoBodyState extends State<DemoBody> with TickerProviderStateMixin {
+class _WaveAnimationBodyState extends State<WaveAnimationBody> with TickerProviderStateMixin {
   AnimationController animationController;
   List<Offset> animList1 = [];
 

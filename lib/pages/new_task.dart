@@ -24,7 +24,7 @@ class _NewTaskPageState extends State<NewTaskPage> {
       return;
     }
 
-    Navigator.pop(context, new Task(0, title, description));
+    Navigator.pop(context, new Task(0, title, description, false));
   }
 
   @override
