@@ -43,15 +43,13 @@ class _NewTaskPageState extends State<NewTaskPage> {
 
   @override
   Widget build(BuildContext context) {
-    final saveButton = InkWell(
-      onTap: _saveTaskAndClose,
-      child: IconButton(
+    final saveButton = IconButton(
+          onPressed: _saveTaskAndClose,
           icon: Icon(
             Icons.save,
             size: 32,
             color: Theme.of(context).primaryColor,
-          )),
-    );
+          ));
     return Scaffold(
         body: new Material(
           color: Colors.white,
@@ -64,17 +62,15 @@ class _NewTaskPageState extends State<NewTaskPage> {
                     padding: const EdgeInsets.only(top: 8, bottom: 8),
                     child: Row(
                       children: <Widget>[
-                        InkWell(
-                          onTap: () {
+                        IconButton(
+                          onPressed: () {
                             Navigator.of(context).pop();
                           },
-                          child: IconButton(
-                              icon: Icon(
+                          icon: Icon(
                                 Icons.arrow_back,
                                 size: 32,
                                 color: Colors.grey,
-                              )),
-                        ),
+                        )),
                         Spacer(),
                         _isSaveButtonVisible ? saveButton : Spacer(),
                       ],
