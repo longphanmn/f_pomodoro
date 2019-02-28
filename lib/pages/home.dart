@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fpomodoro/pages/new_task.dart';
 import 'package:fpomodoro/models/task.dart';
 import 'package:fpomodoro/utils/manager.dart';
+import 'package:fpomodoro/pages/timer.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -124,27 +125,37 @@ class TaskWidget extends StatelessWidget{
       child: Container(
         height: 56.0,
         margin: const EdgeInsets.fromLTRB(16, 4, 16, 4),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              task.description,
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
+        child: Material(
+          child: InkWell(
+            onTap: (){
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => TimerPage(task: task,)),
+              );
+            },
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  task.description,
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  task.title,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
+              ],
             ),
-            Text(
-              task.title,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.normal,
-              ),
-            ),
-          ],
-        ),
-    )
+          ) 
+        ) 
+      )
     );
   }
 }
