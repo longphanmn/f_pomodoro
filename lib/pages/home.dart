@@ -29,7 +29,6 @@ class _HomePageState extends State<HomePage> {
       MaterialPageRoute(builder: (context) => NewTaskPage()),
     );
 
-
     if (task != null){
       await Manager().addNewTask(task);
       await taskManager.loadAllTasks();
@@ -44,9 +43,6 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           _addTask(context);
@@ -54,8 +50,26 @@ class _HomePageState extends State<HomePage> {
         tooltip: 'Add new task',
         child: Icon(Icons.add),
       ),
-      body: Container(
-        margin: EdgeInsets.only(top: 24.0),
+      body: NestedScrollView(
+        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+          return <Widget>[
+            SliverAppBar(
+              expandedHeight: 80.0,
+              floating: false,
+              pinned: false,
+              flexibleSpace: FlexibleSpaceBar(
+                  centerTitle: true,
+                  title: Text(widget.title,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                      )),
+                ),
+            ),
+          ];
+        },
+        body: Container(
         child: StreamBuilder(
             stream: taskManager.tasksData.asStream(),
             initialData: List<Task>(),
@@ -94,6 +108,7 @@ class _HomePageState extends State<HomePage> {
             }
         ),
       ),
+      ),
     );
   }
 }
@@ -111,17 +126,20 @@ class TaskWidget extends StatelessWidget{
         margin: const EdgeInsets.fromLTRB(16, 4, 16, 4),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              task.title,
+              task.description,
               style: TextStyle(
                 fontSize: 24,
+                fontWeight: FontWeight.bold,
               ),
             ),
             Text(
               task.title,
               style: TextStyle(
-                fontSize: 18
+                fontSize: 18,
+                fontWeight: FontWeight.normal,
               ),
             ),
           ],
