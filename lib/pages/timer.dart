@@ -1,13 +1,16 @@
 import 'dart:async';
 import 'dart:math';
+
 import 'package:flutter/material.dart';
-
-import 'package:fpomodoro/models/task.dart';
-
-import 'package:vector_math/vector_math.dart' as Vector;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/animation.dart';
+import 'package:vector_math/vector_math.dart' as Vector;
+
+import 'package:fpomodoro/models/task.dart';
+
+import 'package:fpomodoro/ui/config.dart';
+import 'package:fpomodoro/ui/wave.dart';
 
 class TimerPage extends StatefulWidget {
   final Task task;
@@ -97,36 +100,70 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
     stopwatch.reset();
   }
 
+   _buildCard({Config config, Color backgroundColor = Colors.grey}) {
+    return Container(
+      height: double.infinity,
+      width: double.infinity,
+      child: Card(
+        elevation: 12.0,
+        margin: EdgeInsets.only(right: 0, left: 0, bottom: 0),
+        clipBehavior: Clip.antiAlias,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(16.0))),
+        child: WaveWidget(
+          config: config,
+          backgroundColor: backgroundColor,
+          size: Size(double.infinity, double.infinity),
+          waveAmplitude: 0,
+        ),
+      ),
+    );
+  }
+
+  MaskFilter _blur;
+  final List<MaskFilter> _blurs = [
+    null,
+    MaskFilter.blur(BlurStyle.normal, 10.0),
+    MaskFilter.blur(BlurStyle.inner, 10.0),
+    MaskFilter.blur(BlurStyle.outer, 10.0),
+    MaskFilter.blur(BlurStyle.solid, 16.0),
+  ];
+  int _blurIndex = 0;
+  MaskFilter _nextBlur() {
+    if (_blurIndex == _blurs.length - 1) {
+      _blurIndex = 0;
+    } else {
+      _blurIndex = _blurIndex + 1;
+    }
+    _blur = _blurs[_blurIndex];
+    return _blurs[_blurIndex];
+  }
+
    @override
   Widget build(BuildContext context) {
 
-    heightSize = new Tween(
-        begin: begin,
-        end: MediaQuery.of(context).size.height-65
-    ).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: Curves.easeInOut,
-      ),
-    );
-
-    Size size = new Size(
-        MediaQuery.of(context).size.width,
-        heightSize.value
-    );
 
     return Scaffold(
       backgroundColor: Colors.grey,
       body: Stack(
         children: <Widget>[
-          AnimatedBuilder(
-            animation: _controller,
-            builder: (context, child) {
-              return WaveAnimationBody(
-                  size: size,
-                  color: Theme.of(context).primaryColor,
-              );
-            },
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: stopwatch.elapsed.inSeconds == 0 ? Container() : _buildCard(
+              config: CustomConfig(
+                gradients: [
+                  [Colors.red, Color(0xEEF44336)],
+                  [Colors.red[800], Color(0x77E57373)],
+                  [Colors.orange, Color(0x66FF9800)],
+                  [Colors.yellow, Color(0x55FFEB3B)]
+                ],
+                durations: [35000, 19440, 10800, 6000],
+                heightPercentages: [0.20, 0.23, 0.25, 0.30],
+                blur: _blur,
+                gradientBegin: Alignment.bottomLeft,
+                gradientEnd: Alignment.topRight,
+              ),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.only(top: 32.0, left: 4.0, right: 4.0),
@@ -251,101 +288,4 @@ class _RoundedButtonState extends State<RoundedButton>{
       ),
     );
   }
-}
-
-class WaveAnimationBody extends StatefulWidget {
-  final Size size;
-  final int xOffset;
-  final int yOffset;
-  final Color color;
-
-  WaveAnimationBody(
-      {Key key, @required this.size, this.xOffset = 0, this.yOffset = 0, this.color})
-      : super(key: key);
-
-  @override
-  State<StatefulWidget> createState() {
-    return new _WaveAnimationBodyState();
-  }
-}
-
-class _WaveAnimationBodyState extends State<WaveAnimationBody> with TickerProviderStateMixin {
-  AnimationController animationController;
-  List<Offset> animList1 = [];
-
-  @override
-  void initState() {
-    super.initState();
-
-    animationController = new AnimationController(
-        vsync: this, duration: new Duration(seconds: 2));
-
-    animationController.addListener(() {
-      animList1.clear();
-      for (int i = -2 - widget.xOffset;
-      i <= widget.size.width.toInt() + 2;
-      i++) {
-        animList1.add(new Offset(
-            i.toDouble() + widget.xOffset,
-            sin((animationController.value * 360 - i) %
-                360 *
-                Vector.degrees2Radians) *
-                10 +
-                30 +
-                widget.yOffset));
-      }
-    });
-    animationController.repeat();
-  }
-
-  @override
-  void dispose() {
-    animationController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return new Container(
-      alignment: Alignment.bottomCenter,
-      child: new AnimatedBuilder(
-        animation: new CurvedAnimation(
-          parent: animationController,
-          curve: Curves.easeInOut,
-        ),
-        builder: (context, child) => new ClipPath(
-          child: new Container(
-            width: widget.size.width,
-            height: widget.size.height,
-            color: widget.color,
-          ),
-          clipper: new WaveClipper(animationController.value, animList1),
-        ),
-      ),
-    );
-  }
-}
-
-class WaveClipper extends CustomClipper<Path> {
-  final double animation;
-
-  List<Offset> waveList1 = [];
-
-  WaveClipper(this.animation, this.waveList1);
-
-  @override
-  Path getClip(Size size) {
-    Path path = new Path();
-
-    path.addPolygon(waveList1, false);
-
-    path.lineTo(size.width, size.height);
-    path.lineTo(0.0, size.height);
-    path.close();
-    return path;
-  }
-
-  @override
-  bool shouldReclip(WaveClipper oldClipper) =>
-      animation != oldClipper.animation;
 }
