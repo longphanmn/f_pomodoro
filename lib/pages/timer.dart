@@ -23,11 +23,8 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
 
   Task getTask() => widget.task;
 
-  /// Store the time
-  /// You will pass the minutes.
   String timeText = '';
   String buttonText = 'Start';
-  String statusText = "Left on this Task";
 
   int minutes = 25;
 
@@ -54,24 +51,20 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
     var currentMinute = stopwatch.elapsed.inMinutes;
 
     setState(() {
-      timeText = '${currentMinute.toString().padLeft(2,"0")}:${((stopwatch.elapsed.inSeconds%60)).toString().padLeft(2, '0')}';
+      timeText = '${(minutes - currentMinute - 1).toString().padLeft(2,"0")}:${((60 - stopwatch.elapsed.inSeconds%60 - 1)).toString().padLeft(2, '0')}';
     });
 
     if (stopwatch.isRunning) {
       setState(() {
-
-        statusText = "${minutes-currentMinute} minutes left";
         buttonText = "Running";
       });
     }else if(stopwatch.elapsed.inSeconds == 0){
       setState(() {
         timeText = '$minutes:00';
-        statusText = "Left on this Task";
         buttonText = "Start";
       });
     }else{
       setState(() {
-        statusText = 'Paused';
         buttonText = "Paused";
       });
     }
@@ -195,10 +188,6 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
                       timeText,
                       style: TextStyle(fontSize: 54.0, color: Colors.white),
                     ),
-                    Text(
-                      statusText,
-                      style: TextStyle(color: Colors.white70),
-                    ),
                   ],
                 ),
               ),
@@ -230,64 +219,6 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
       ),
     );
   }
-
-  // @override
-  // Widget build(BuildContext context) {
-  //   return Scaffold(
-  //       body: new Material(
-  //         color: Colors.white,
-  //         child: Stack(
-  //           children: <Widget>[
-  //             ListView(
-  //               shrinkWrap: false,
-  //               children: <Widget>[
-  //                 Padding(
-  //                   padding: const EdgeInsets.only(top: 8, bottom: 4),
-  //                   child: Row(
-  //                     children: <Widget>[
-  //                       IconButton(
-  //                         onPressed: () {
-  //                           Navigator.of(context).pop();
-  //                         },
-  //                         icon: Icon(
-  //                               Icons.arrow_back,
-  //                               size: 32,
-  //                               color: Colors.grey,
-  //                       )),
-  //                     ],
-  //                   ),
-  //                 ),
-  //                 Padding(
-  //                   padding: const EdgeInsets.only(top: 0, left: 16, bottom: 8),
-  //                   child: Column(
-  //                     crossAxisAlignment: CrossAxisAlignment.start,
-  //                     mainAxisAlignment: MainAxisAlignment.center,
-  //                     children: <Widget>[
-  //                       new Text(
-  //                         widget.task.title,
-  //                         style: TextStyle(
-  //                           fontSize: 24,
-  //                           fontWeight: FontWeight.bold,
-  //                         ),
-  //                       ),
-  //                       new Text(
-  //                         widget.task.description,
-  //                         style: TextStyle(
-  //                           fontSize: 20,
-  //                           fontWeight: FontWeight.normal,
-  //                         ),
-  //                       ),
-  //                     ],
-  //                   ),
-  //                 ),
-                  
-  //               ],
-  //             )
-  //           ],
-  //         ),
-  //       )
-  //   );
-  // }
 }
 
 class RoundedButton extends StatefulWidget{
