@@ -98,7 +98,7 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
     stopwatch.reset();
   }
 
-   _buildCard({Config config, Color backgroundColor = Colors.grey}) {
+   _buildCard({Config config, Color backgroundColor = Colors.transparent}) {
     return Container(
       height: double.infinity,
       width: double.infinity,
@@ -142,12 +142,12 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
 
 
     return Scaffold(
-      backgroundColor: Colors.grey,
+      backgroundColor: Colors.transparent,
       body: Stack(
         children: <Widget>[
           Align(
             alignment: Alignment.bottomCenter,
-            child: stopwatch.elapsed.inSeconds == 0 ? Container() : _buildCard(
+            child: _buildCard(
               config: CustomConfig(
                 gradients: [
                   [Colors.red, Color(0xEEF44336)],
@@ -171,7 +171,7 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
                     icon: Icon(
                       Icons.navigate_before,
                       size: 40.0,
-                      color: Colors.white70,
+                      color: Colors.grey,
                     ),
                     onPressed: () {
                       Navigator.of(context).pop();
@@ -181,7 +181,7 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
                   icon: Icon(
                     Icons.done,
                     size: 32.0,
-                    color: Colors.white70,
+                    color: Colors.grey,
                   ),
                   onPressed: (){
                     Navigator.of(context).pop(getTask());
@@ -199,11 +199,11 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
                   children: <Widget>[
                     Text(
                       widget.task.title,
-                      style: TextStyle(fontSize: 30.0, color: Colors.white),
+                      style: TextStyle(fontSize: 30.0, color: Colors.grey),
                     ),
                     Text(
                       widget.task.description,
-                      style: TextStyle(color: Colors.white70),
+                      style: TextStyle(color: Colors.grey),
                     ),
                   ],
               ),
@@ -219,7 +219,7 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
                   children: <Widget>[
                     Text(
                       timeText,
-                      style: TextStyle(fontSize: 54.0, color: Colors.white),
+                      style: TextStyle(fontSize: 54.0, color: Colors.black, fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
