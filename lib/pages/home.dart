@@ -33,6 +33,7 @@ class _HomePageState extends State<HomePage> {
     );
     if (result != null) {
       await Manager().updateTask(result);
+      await taskManager.loadAllTasks();
       setState(() {
         final snackBar = SnackBar(content: Text('Finished: ${result.title}'));
         _scaffoldKey.currentState.showSnackBar(snackBar);
@@ -48,9 +49,12 @@ class _HomePageState extends State<HomePage> {
 
     if (task != null) {
       await Manager().addNewTask(task);
-      final snackBar = SnackBar(content: Text('Added: ${task.title}'));
-      _scaffoldKey.currentState.showSnackBar(snackBar);
-      setState(() {});
+      await taskManager.loadAllTasks();
+      setState(() {
+        final snackBar = SnackBar(content: Text('Added: ${task.title}'));
+        _scaffoldKey.currentState.showSnackBar(snackBar);
+      });
+
     }
   }
 
@@ -91,6 +95,7 @@ class _HomePageState extends State<HomePage> {
               builder:
                   (BuildContext context, AsyncSnapshot<List<Task>> snapshot) {
                 var tasks = snapshot.data.reversed;
+                print('Count: ${tasks.length}');
 
                 if (snapshot.connectionState != ConnectionState.done) {
                   return Center(
@@ -139,35 +144,41 @@ class TaskWidget extends StatelessWidget {
     return Card(
         margin: const EdgeInsets.fromLTRB(4, 4, 4, 4),
         child: Container(
-          height: 72.0,
+          height: 56.0,
           margin: const EdgeInsets.fromLTRB(16, 4, 16, 4),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              Text(
-                task.title,
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.normal,
-                ),
+              Icon(
+                task.done ? Icons.check_circle : Icons.check_circle_outline,
+                color: task.done ? Colors.green : Colors.red,
               ),
-              Text(
-                task.description,
-                style: TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.normal,
-                ),
-              ),
-              Text(
-                task.done ? "Done" : "On-going",
-                style: TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.normal,
-                ),
-              ),
+              Padding (
+                padding: EdgeInsets.only(left: 8),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        task.description,
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                      Text(
+                        task.done ? "Done" : "On-going",
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                    ],
+                  ),
+              )
+
             ],
-          ),
+          )
         ));
   }
 }

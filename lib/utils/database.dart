@@ -42,18 +42,18 @@ class DatabaseUtil {
     var table = await db.rawQuery('SELECT MAX(id)+1 as id FROM Task');
     var id = table.first['id'];
 
-    var raw = db.rawInsert(
+    var raw = await db.rawInsert(
         'INSERT Into Task (id, title, description, done) VALUES (?,?,?,?)',
         [id, task.title, task.description, task.done ? 1 : 0]);
 
-    print('Saved');
+    print('Saved: $raw');
     return raw;
   }
 
   update(Task task) async {
     var db = await database;
 
-    var raw = db.rawUpdate(
+    var raw = await db.rawUpdate(
         'UPDATE Task SET title = ?, description = ?, done = ? WHERE id = ?',
         [task.title, task.description, task.done ? 1 : 0, task.id]);
 

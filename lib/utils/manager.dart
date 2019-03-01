@@ -6,12 +6,10 @@ class Manager {
 
   addNewTask(Task task) async {
     await DatabaseUtil.db.insert(task);
-    loadAllTasks();
   }
 
   updateTask(Task task) async {
     await DatabaseUtil.db.update(task);
-    loadAllTasks();
   }
 
   loadAllTasks() {

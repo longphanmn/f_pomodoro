@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fpomodoro/models/task.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:fpomodoro/utils/manager.dart';
 
 class NewTaskPage extends StatefulWidget {
   NewTaskPage({Key key}) : super(key: key);
