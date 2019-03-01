@@ -18,8 +18,8 @@ class TimerPage extends StatefulWidget {
   _TimerPageState createState() => _TimerPageState();
 }
 
-class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMixin  {
-
+class _TimerPageState extends State<TimerPage>
+    with SingleTickerProviderStateMixin {
   Timer timer;
 
   Task getTask() => widget.task;
@@ -36,10 +36,9 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
   Animation<double> heightSize;
   AnimationController _controller;
 
-  void updateClock(){
-    
-    if(stopwatch.elapsed.inMinutes == minutes){
-      if(Navigator.canPop(context)){
+  void updateClock() {
+    if (stopwatch.elapsed.inMinutes == minutes) {
+      if (Navigator.canPop(context)) {
         Navigator.of(context).pop(getTask());
       }
       return;
@@ -48,19 +47,20 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
     var currentMinute = stopwatch.elapsed.inMinutes;
 
     setState(() {
-      timeText = '${(minutes - currentMinute - 1).toString().padLeft(2,"0")}:${((60 - stopwatch.elapsed.inSeconds%60 - 1)).toString().padLeft(2, '0')}';
+      timeText =
+          '${(minutes - currentMinute - 1).toString().padLeft(2, "0")}:${((60 - stopwatch.elapsed.inSeconds % 60 - 1)).toString().padLeft(2, '0')}';
     });
 
     if (stopwatch.isRunning) {
       setState(() {
         buttonText = "Running";
       });
-    }else if(stopwatch.elapsed.inSeconds == 0){
+    } else if (stopwatch.elapsed.inSeconds == 0) {
       setState(() {
         timeText = '$minutes:00';
         buttonText = "Start";
       });
-    }else{
+    } else {
       setState(() {
         buttonText = "Paused";
       });
@@ -76,10 +76,10 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
       vsync: this,
     );
 
-    _controller.addStatusListener((state){
+    _controller.addStatusListener((state) {
       print('-----animation state: $state');
     });
-    
+
     timer = Timer.periodic(delay, (Timer t) => updateClock());
   }
 
@@ -98,7 +98,7 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
     stopwatch.reset();
   }
 
-   _buildCard({Config config, Color backgroundColor = Colors.transparent}) {
+  _buildCard({Config config, Color backgroundColor = Colors.transparent}) {
     return Container(
       height: double.infinity,
       width: double.infinity,
@@ -137,10 +137,8 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
     return _blurs[_blurIndex];
   }
 
-   @override
+  @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Stack(
@@ -183,7 +181,7 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
                     size: 32.0,
                     color: Colors.grey,
                   ),
-                  onPressed: (){
+                  onPressed: () {
                     Task task = getTask();
                     task.done = true;
                     Navigator.of(context).pop(task);
@@ -197,17 +195,17 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
             child: Container(
               margin: EdgeInsets.only(top: 100),
               child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Text(
-                      widget.task.title,
-                      style: TextStyle(fontSize: 30.0, color: Colors.grey),
-                    ),
-                    Text(
-                      widget.task.description,
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                  ],
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Text(
+                    widget.task.title,
+                    style: TextStyle(fontSize: 30.0, color: Colors.grey),
+                  ),
+                  Text(
+                    widget.task.description,
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                ],
               ),
             ),
           ),
@@ -221,7 +219,10 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
                   children: <Widget>[
                     Text(
                       timeText,
-                      style: TextStyle(fontSize: 54.0, color: Colors.black, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          fontSize: 54.0,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
@@ -254,16 +255,15 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
   }
 }
 
-class RoundedButton extends StatefulWidget{
+class RoundedButton extends StatefulWidget {
   final String text;
-  RoundedButton({Key key, @required this.text}): super(key: key);
+  RoundedButton({Key key, @required this.text}) : super(key: key);
 
   @override
   _RoundedButtonState createState() => _RoundedButtonState();
 }
 
-class _RoundedButtonState extends State<RoundedButton>{
-
+class _RoundedButtonState extends State<RoundedButton> {
   @override
   Widget build(BuildContext context) {
     return new Container(
@@ -273,16 +273,13 @@ class _RoundedButtonState extends State<RoundedButton>{
           color: Colors.white,
           borderRadius: BorderRadius.circular(100.0),
           boxShadow: <BoxShadow>[
-            BoxShadow(
-                color: Colors.white,
-                blurRadius: 0.0
-            )
-          ]
-      ),
+            BoxShadow(color: Colors.white, blurRadius: 0.0)
+          ]),
       child: Center(
-        child: Text(widget.text.toUpperCase(),
+        child: Text(
+          widget.text.toUpperCase(),
           style: TextStyle(
-              fontSize: 20.0,
+            fontSize: 20.0,
           ),
         ),
       ),

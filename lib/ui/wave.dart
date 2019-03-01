@@ -152,7 +152,6 @@ class Layer {
   });
 }
 
-
 class _CustomWavePainter extends CustomPainter {
   final ColorMode colorMode;
   final Color color;
@@ -220,7 +219,9 @@ class _CustomWavePainter extends CustomPainter {
       var rect = Offset.zero &
           Size(size.width, size.height - viewCenterY * heightPercentange);
       _paint.shader = LinearGradient(
-              begin: gradientBegin == null ? Alignment.bottomCenter : gradientBegin,
+              begin: gradientBegin == null
+                  ? Alignment.bottomCenter
+                  : gradientBegin,
               end: gradientEnd == null ? Alignment.topCenter : gradientEnd,
               colors: _layer.gradient)
           .createShader(rect);

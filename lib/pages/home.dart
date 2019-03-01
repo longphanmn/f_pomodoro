@@ -23,14 +23,17 @@ class _HomePageState extends State<HomePage> {
     taskManager.loadAllTasks();
   }
 
-  void _startTimer(Task task) async{
+  void _startTimer(Task task) async {
     Task result = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => TimerPage(task: task,)),
+      MaterialPageRoute(
+          builder: (context) => TimerPage(
+                task: task,
+              )),
     );
-    if (result != null){
+    if (result != null) {
       await Manager().updateTask(result);
-      setState((){
+      setState(() {
         final snackBar = SnackBar(content: Text('Finished: ${result.title}'));
         _scaffoldKey.currentState.showSnackBar(snackBar);
       });
@@ -38,22 +41,18 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _addTask() async {
-
     Task task = await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => NewTaskPage()),
     );
 
-    if (task != null){
+    if (task != null) {
       await Manager().addNewTask(task);
-      setState((){
-        final snackBar = SnackBar(content: Text('Added: ${task.title}'));
-        _scaffoldKey.currentState.showSnackBar(snackBar);
-      });
+      final snackBar = SnackBar(content: Text('Added: ${task.title}'));
+      _scaffoldKey.currentState.showSnackBar(snackBar);
+      setState(() {});
     }
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -74,102 +73,101 @@ class _HomePageState extends State<HomePage> {
               floating: true,
               pinned: false,
               flexibleSpace: FlexibleSpaceBar(
-                  centerTitle: true,
-                  title: Text(widget.title,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
-                      )),
-                ),
+                centerTitle: true,
+                title: Text(widget.title,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold,
+                    )),
+              ),
             ),
           ];
         },
         body: Container(
-        child: StreamBuilder(
-            stream: taskManager.tasksData.asStream(),
-            initialData: List<Task>(),
-            builder: (BuildContext context, AsyncSnapshot<List<Task>> snapshot) {
-              var tasks = snapshot.data.reversed;
+          child: StreamBuilder(
+              stream: taskManager.tasksData.asStream(),
+              initialData: List<Task>(),
+              builder:
+                  (BuildContext context, AsyncSnapshot<List<Task>> snapshot) {
+                var tasks = snapshot.data.reversed;
 
-              if(snapshot.connectionState != ConnectionState.done){
-                return Center(child: CircularProgressIndicator(),);
-              }
+                if (snapshot.connectionState != ConnectionState.done) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
 
-              if (tasks != null && tasks.length == 0) {
-                return Center(
-                  child: Text('No Tasks!',
-                    style: TextStyle(
-                      fontSize: 24
+                if (tasks != null && tasks.length == 0) {
+                  return Center(
+                    child: Text(
+                      'No Tasks!',
+                      style: TextStyle(fontSize: 24),
                     ),
-                  ),
-                );
-              }else {
-                return ListView.builder(
-                  padding: EdgeInsets.only(top: 0),
-                  itemCount: tasks.length,
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  itemBuilder: (BuildContext context, int index) {
-                    var item = tasks.elementAt(index);
-                    return Material(
-                      child: InkWell(
+                  );
+                } else {
+                  return ListView.builder(
+                    padding: EdgeInsets.only(top: 0),
+                    itemCount: tasks.length,
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemBuilder: (BuildContext context, int index) {
+                      var item = tasks.elementAt(index);
+                      return Material(
+                          child: InkWell(
                         child: new TaskWidget(task: item),
                         onTap: () {
                           _startTimer(item);
                         },
-                    ));
-                   
-                  },
-                );
-              }
-            }
+                      ));
+                    },
+                  );
+                }
+              }),
         ),
-      ),
       ),
     );
   }
 }
 
-class TaskWidget extends StatelessWidget{
+class TaskWidget extends StatelessWidget {
   TaskWidget({Key key, this.task}) : super(key: key);
   final Task task;
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.fromLTRB(4, 4, 4, 4),
-          child: Container(
-            height: 72.0,
-            margin: const EdgeInsets.fromLTRB(16, 4, 16, 4),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  task.title,
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.normal,
-                  ),
+        margin: const EdgeInsets.fromLTRB(4, 4, 4, 4),
+        child: Container(
+          height: 72.0,
+          margin: const EdgeInsets.fromLTRB(16, 4, 16, 4),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                task.title,
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.normal,
                 ),
-                Text(
-                  task.description,
-                  style: TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.normal,
-                  ),
+              ),
+              Text(
+                task.description,
+                style: TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.normal,
                 ),
-                Text(
-                  task.done ? "Done" : "On-going",
-                  style: TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.normal,
-                  ),
+              ),
+              Text(
+                task.done ? "Done" : "On-going",
+                style: TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.normal,
                 ),
-              ],
-            ),
-          ) 
-    );
+              ),
+            ],
+          ),
+        ));
   }
 }

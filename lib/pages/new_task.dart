@@ -20,7 +20,7 @@ class _NewTaskPageState extends State<NewTaskPage> {
     String title = _titleController.text;
     String description = _descriptionController.text;
 
-    if(title.trim().isEmpty) {
+    if (title.trim().isEmpty) {
       return;
     }
 
@@ -44,85 +44,86 @@ class _NewTaskPageState extends State<NewTaskPage> {
   @override
   Widget build(BuildContext context) {
     final saveButton = IconButton(
-          onPressed: _saveTaskAndClose,
-          tooltip: 'Save task',
-          icon: Icon(
-            Icons.save,
-            size: 32,
-            color: Theme.of(context).primaryColor,
-          ));
+        onPressed: _saveTaskAndClose,
+        tooltip: 'Save task',
+        icon: Icon(
+          Icons.save,
+          size: 32,
+          color: Theme.of(context).primaryColor,
+        ));
     return Scaffold(
         body: new Material(
-          color: Colors.white,
-          child: Stack(
+      color: Colors.white,
+      child: Stack(
+        children: <Widget>[
+          ListView(
+            shrinkWrap: false,
             children: <Widget>[
-              ListView(
-                shrinkWrap: false,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8, bottom: 8),
-                    child: Row(
-                      children: <Widget>[
-                        IconButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          icon: Icon(
-                                Icons.arrow_back,
-                                size: 32,
-                                color: Colors.grey,
+              Padding(
+                padding: const EdgeInsets.only(top: 8, bottom: 8),
+                child: Row(
+                  children: <Widget>[
+                    IconButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        icon: Icon(
+                          Icons.arrow_back,
+                          size: 32,
+                          color: Colors.grey,
                         )),
-                        Spacer(),
-                        _isSaveButtonVisible ? saveButton : Spacer(),
-                      ],
-                    ),
-                  ),
-                  new TextField(
-                    maxLength: maxTitleLength,
-                    controller: _titleController,
-                    style: TextStyle(
-                      fontSize: 24.0,
-                      color: Colors.black,
-                    ),
-                    decoration: InputDecoration(
-                      hintText: 'Task title',
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.only(left: 32, right: 32, bottom: 4),
-                    ),
-                    onChanged: (text) {
-                      final needSaveButton = _titleController.text.trim().length > 0;
-                      if (_isSaveButtonVisible != needSaveButton){
-                        setState(() {
-                          _isSaveButtonVisible = needSaveButton;
-                        });
-                      }
-
-                    },
-                  ),
-                  new TextField(
-                    controller: _descriptionController,
-                    keyboardType: TextInputType.multiline,
-                    maxLines: 10,
-                    style: TextStyle(
-                      fontSize: 18.0,
-                      color: Colors.black,
-                    ),
-                    decoration: InputDecoration(
-                      hintText: 'Description',
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: InputBorder.none,
-                      counterText: "",
-                      contentPadding: EdgeInsets.only(left: 32, right: 32, bottom: 4),
-                    ),
-                  ),
-                ],
-              )
+                    Spacer(),
+                    _isSaveButtonVisible ? saveButton : Spacer(),
+                  ],
+                ),
+              ),
+              new TextField(
+                maxLength: maxTitleLength,
+                controller: _titleController,
+                style: TextStyle(
+                  fontSize: 24.0,
+                  color: Colors.black,
+                ),
+                decoration: InputDecoration(
+                  hintText: 'Task title',
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: InputBorder.none,
+                  contentPadding:
+                      EdgeInsets.only(left: 32, right: 32, bottom: 4),
+                ),
+                onChanged: (text) {
+                  final needSaveButton =
+                      _titleController.text.trim().length > 0;
+                  if (_isSaveButtonVisible != needSaveButton) {
+                    setState(() {
+                      _isSaveButtonVisible = needSaveButton;
+                    });
+                  }
+                },
+              ),
+              new TextField(
+                controller: _descriptionController,
+                keyboardType: TextInputType.multiline,
+                maxLines: 10,
+                style: TextStyle(
+                  fontSize: 18.0,
+                  color: Colors.black,
+                ),
+                decoration: InputDecoration(
+                  hintText: 'Description',
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: InputBorder.none,
+                  counterText: "",
+                  contentPadding:
+                      EdgeInsets.only(left: 32, right: 32, bottom: 4),
+                ),
+              ),
             ],
-          ),
-        )
-    );
+          )
+        ],
+      ),
+    ));
   }
 }
