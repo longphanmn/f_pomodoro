@@ -91,6 +91,7 @@ class _TimerPageState extends State<TimerPage>
 
   @override
   Widget build(BuildContext context) {
+
     heightSize =
         new Tween(begin: begin, end: MediaQuery.of(context).size.height - 65)
             .animate(
@@ -100,12 +101,7 @@ class _TimerPageState extends State<TimerPage>
       ),
     );
 
-    var height = heightSize.value *
-        10 *
-        (minutes - stopwatch.elapsed.inMinutes - 1) /
-        minutes;
-
-    Size size = new Size(MediaQuery.of(context).size.width, height);
+    Size size = new Size(MediaQuery.of(context).size.width, heightSize.value*0.9);
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
