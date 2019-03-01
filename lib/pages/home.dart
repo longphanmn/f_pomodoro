@@ -23,7 +23,21 @@ class _HomePageState extends State<HomePage> {
     taskManager.loadAllTasks();
   }
 
-  void _addTask(BuildContext context) async {
+  void _startTimer(Task task) async{
+    Task result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => TimerPage(task: task,)),
+    );
+    if (result != null){
+      await Manager().updateTask(result);
+      setState((){
+        final snackBar = SnackBar(content: Text('Finished: ${result.title}'));
+        _scaffoldKey.currentState.showSnackBar(snackBar);
+      });
+    }
+  }
+
+  void _addTask() async {
 
     Task task = await Navigator.push(
       context,
@@ -32,7 +46,6 @@ class _HomePageState extends State<HomePage> {
 
     if (task != null){
       await Manager().addNewTask(task);
-      await taskManager.loadAllTasks();
       setState((){
         final snackBar = SnackBar(content: Text('Added: ${task.title}'));
         _scaffoldKey.currentState.showSnackBar(snackBar);
@@ -40,13 +53,15 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          _addTask(context);
+          _addTask();
         },
         tooltip: 'Add new task',
         child: Icon(Icons.add),
@@ -97,13 +112,14 @@ class _HomePageState extends State<HomePage> {
                   shrinkWrap: true,
                   itemBuilder: (BuildContext context, int index) {
                     var item = tasks.elementAt(index);
-                    return GestureDetector(
-                      child: new TaskWidget(task: item
-                      ),
-                      onTap: () {
-                        
-                      },
-                    );
+                    return Material(
+                      child: InkWell(
+                        child: new TaskWidget(task: item),
+                        onTap: () {
+                          _startTimer(item);
+                        },
+                    ));
+                   
                   },
                 );
               }
@@ -123,16 +139,8 @@ class TaskWidget extends StatelessWidget{
   Widget build(BuildContext context) {
     return Card(
       margin: const EdgeInsets.fromLTRB(4, 4, 4, 4),
-      child: Material(
-        child: InkWell(
-          onTap: (){
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => TimerPage(task: task,)),
-              );
-          },
           child: Container(
-            height: 56.0,
+            height: 72.0,
             margin: const EdgeInsets.fromLTRB(16, 4, 16, 4),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -152,11 +160,16 @@ class TaskWidget extends StatelessWidget{
                     fontWeight: FontWeight.normal,
                   ),
                 ),
+                Text(
+                  task.done ? "Done" : "On-going",
+                  style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
               ],
             ),
           ) 
-        ) 
-      )
     );
   }
 }

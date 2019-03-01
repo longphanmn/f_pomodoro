@@ -55,6 +55,19 @@ class DatabaseUtil{
     return raw;
   }
 
+  update(Task task) async{
+
+    var db = await database;
+
+    var raw = db.rawUpdate(
+        'UPDATE Task SET title = ?, description = ?, done = ? WHERE id = ?',
+        [task.title, task.description, task.done ? 1 : 0, task.id]
+    );
+
+    print('Updated');
+    return raw;
+  }
+
   Future<List<Task>> getAll() async {
 
     var db = await database;

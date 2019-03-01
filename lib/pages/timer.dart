@@ -184,7 +184,9 @@ class _TimerPageState extends State<TimerPage> with SingleTickerProviderStateMix
                     color: Colors.grey,
                   ),
                   onPressed: (){
-                    Navigator.of(context).pop(getTask());
+                    Task task = getTask();
+                    task.done = true;
+                    Navigator.of(context).pop(task);
                   },
                 ),
               ],
