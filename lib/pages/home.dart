@@ -54,7 +54,6 @@ class _HomePageState extends State<HomePage> {
         final snackBar = SnackBar(content: Text('Added: ${task.title}'));
         _scaffoldKey.currentState.showSnackBar(snackBar);
       });
-
     }
   }
 
@@ -67,7 +66,10 @@ class _HomePageState extends State<HomePage> {
           _addTask();
         },
         tooltip: 'Add new task',
-        child: Icon(Icons.add),
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
       ),
       body: NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
@@ -144,18 +146,18 @@ class TaskWidget extends StatelessWidget {
     return Card(
         margin: const EdgeInsets.fromLTRB(4, 4, 4, 4),
         child: Container(
-          height: 56.0,
-          margin: const EdgeInsets.fromLTRB(16, 4, 16, 4),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Icon(
-                task.done ? Icons.check_circle : Icons.check_circle_outline,
-                color: task.done ? Colors.green : Colors.red,
-              ),
-              Padding (
-                padding: EdgeInsets.only(left: 8),
-                child: Column(
+            height: 56.0,
+            margin: const EdgeInsets.fromLTRB(16, 4, 16, 4),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Icon(
+                  task.done ? Icons.check_circle : Icons.check_circle_outline,
+                  color: task.done ? Colors.green : Colors.red,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 8),
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
@@ -175,10 +177,8 @@ class TaskWidget extends StatelessWidget {
                       ),
                     ],
                   ),
-              )
-
-            ],
-          )
-        ));
+                )
+              ],
+            )));
   }
 }

@@ -6,8 +6,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter/animation.dart';
 
 import 'package:fpomodoro/models/task.dart';
-
-import 'package:fpomodoro/ui/config.dart';
 import 'package:fpomodoro/ui/wave.dart';
 
 class TimerPage extends StatefulWidget {
@@ -91,75 +89,36 @@ class _TimerPageState extends State<TimerPage>
     super.dispose();
   }
 
-  void _restartCountDown() {
-    begin = 0.0;
-    _controller.reset();
-    stopwatch.stop();
-    stopwatch.reset();
-  }
-
-  _buildCard({Config config, Color backgroundColor = Colors.transparent}) {
-    return Container(
-      height: double.infinity,
-      width: double.infinity,
-      child: Card(
-        elevation: 12.0,
-        margin: EdgeInsets.only(right: 0, left: 0, bottom: 0),
-        clipBehavior: Clip.antiAlias,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(16.0))),
-        child: WaveWidget(
-          config: config,
-          backgroundColor: backgroundColor,
-          size: Size(double.infinity, double.infinity),
-          waveAmplitude: 0,
-        ),
-      ),
-    );
-  }
-
-  MaskFilter _blur;
-  final List<MaskFilter> _blurs = [
-    null,
-    MaskFilter.blur(BlurStyle.normal, 10.0),
-    MaskFilter.blur(BlurStyle.inner, 10.0),
-    MaskFilter.blur(BlurStyle.outer, 10.0),
-    MaskFilter.blur(BlurStyle.solid, 16.0),
-  ];
-  int _blurIndex = 0;
-  MaskFilter _nextBlur() {
-    if (_blurIndex == _blurs.length - 1) {
-      _blurIndex = 0;
-    } else {
-      _blurIndex = _blurIndex + 1;
-    }
-    _blur = _blurs[_blurIndex];
-    return _blurs[_blurIndex];
-  }
-
   @override
   Widget build(BuildContext context) {
+    heightSize = new Tween(
+        begin: begin,
+        end: MediaQuery.of(context).size.height-65
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeInOut,
+      ),
+    );
+
+    var height = heightSize.value*10*(minutes - stopwatch.elapsed.inMinutes - 1)/minutes;
+
+    Size size = new Size(
+        MediaQuery.of(context).size.width,
+        height
+    );
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: Colors.white,
       body: Stack(
         children: <Widget>[
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: _buildCard(
-              config: CustomConfig(
-                gradients: [
-                  [Colors.red, Color(0xEEF44336)],
-                  [Colors.red[800], Color(0x77E57373)],
-                  [Colors.orange, Color(0x66FF9800)],
-                  [Colors.yellow, Color(0x55FFEB3B)]
-                ],
-                durations: [35000, 19440, 10800, 6000],
-                heightPercentages: [0.20, 0.23, 0.25, 0.30],
-                blur: _blur,
-                gradientBegin: Alignment.bottomLeft,
-                gradientEnd: Alignment.topRight,
-              ),
-            ),
+          AnimatedBuilder(
+            animation: _controller,
+            builder: (context, child) {
+              return DemoBody(
+                  size: size,
+                  color: Theme.of(context).primaryColor,
+              );
+            },
           ),
           Padding(
             padding: const EdgeInsets.only(top: 32.0, left: 4.0, right: 4.0),
@@ -167,7 +126,7 @@ class _TimerPageState extends State<TimerPage>
               children: <Widget>[
                 IconButton(
                     icon: Icon(
-                      Icons.navigate_before,
+                      Icons.arrow_back,
                       size: 40.0,
                       color: Colors.grey,
                     ),
@@ -177,9 +136,9 @@ class _TimerPageState extends State<TimerPage>
                 Spacer(),
                 IconButton(
                   icon: Icon(
-                    Icons.done,
+                    Icons.done_all,
                     size: 32.0,
-                    color: Colors.grey,
+                    color: Theme.of(context).primaryColor,
                   ),
                   onPressed: () {
                     Task task = getTask();
@@ -280,6 +239,7 @@ class _RoundedButtonState extends State<RoundedButton> {
           widget.text.toUpperCase(),
           style: TextStyle(
             fontSize: 20.0,
+            color: Theme.of(context).primaryColor,
           ),
         ),
       ),
