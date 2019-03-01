@@ -162,16 +162,16 @@ class TaskWidget extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Text(
-                        task.description,
+                        task.title,
                         style: TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.normal,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                       Text(
-                        task.done ? "Done" : "On-going",
+                        task.description,
                         style: TextStyle(
-                          fontSize: 17,
+                          fontSize: 16,
                           fontWeight: FontWeight.normal,
                         ),
                       ),
