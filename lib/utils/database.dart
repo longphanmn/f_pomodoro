@@ -25,14 +25,15 @@ class DatabaseUtil{
   init() async{
 
     Directory documentDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentDirectory.path, 'task_timer.db');
+    String path = join(documentDirectory.path, 'tasks.db');
 
     return await openDatabase(path, version: 1, onOpen: (db) {},
         onCreate: (Database db, int version) async {
           await db.execute('CREATE TABLE Task ('
               'id INTEGER PRIMARY KEY,'
               'title TEXT,'
-              'description TEXT'
+              'description TEXT,'
+              'done INTEGER'
               ')');
         }
     );
@@ -46,8 +47,8 @@ class DatabaseUtil{
     var id = table.first['id'];
 
     var raw = db.rawInsert(
-        'INSERT Into Task (id, title, description) VALUES (?,?,?)',
-        [id, task.title, task.description]
+        'INSERT Into Task (id, title, description, done) VALUES (?,?,?,?)',
+        [id, task.title, task.description, task.done ? 1 : 0]
     );
 
     print('Saved');
@@ -61,7 +62,6 @@ class DatabaseUtil{
 
     List<Task> tasks = query.isNotEmpty ?
     query.map((t) => Task.fromMap(t)).toList() : [ ];
-
 
     return tasks;
   }

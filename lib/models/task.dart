@@ -10,6 +10,6 @@ class Task{
       json['id'],
       json['title'],
       json['description'],
-      json['done']
+      json['done'] == 1 ? true : false
   );
 }

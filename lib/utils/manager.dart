@@ -3,15 +3,15 @@ import 'package:fpomodoro/models/task.dart';
 
 class Manager {
 
-  Future<List<Task>> _tasksData;
+  Future<List<Task>> tasksData;
 
-  Future<List<Task>> get tasksData => _tasksData;
 
-  addNewTask(Task task) {
-    DatabaseUtil.db.insert(task);
+  addNewTask(Task task) async {
+    await DatabaseUtil.db.insert(task);
+    loadAllTasks();
   }
 
   loadAllTasks(){
-    _tasksData = DatabaseUtil.db.getAll();
+    tasksData = DatabaseUtil.db.getAll();
   }
 }
