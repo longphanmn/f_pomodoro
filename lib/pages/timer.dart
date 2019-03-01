@@ -228,17 +228,17 @@ class _RoundedButtonState extends State<RoundedButton> {
       width: 140.0,
       height: 140.0,
       decoration: new BoxDecoration(
-          color: Colors.white,
+          color: Color.fromRGBO(220, 220, 220, 220),
           borderRadius: BorderRadius.circular(100.0),
           boxShadow: <BoxShadow>[
-            BoxShadow(color: Colors.white, blurRadius: 0.0)
+            BoxShadow(color: Color.fromRGBO(220, 220, 220, 220), blurRadius: 0.0)
           ]),
       child: Center(
         child: Text(
           widget.text.toUpperCase(),
           style: TextStyle(
-            fontSize: 20.0,
-            color: Theme.of(context).primaryColor,
+            fontSize: 24.0,
+            color: Colors.black,
           ),
         ),
       ),
