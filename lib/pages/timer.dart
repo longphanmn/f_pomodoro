@@ -91,22 +91,21 @@ class _TimerPageState extends State<TimerPage>
 
   @override
   Widget build(BuildContext context) {
-    heightSize = new Tween(
-        begin: begin,
-        end: MediaQuery.of(context).size.height-65
-    ).animate(
+    heightSize =
+        new Tween(begin: begin, end: MediaQuery.of(context).size.height - 65)
+            .animate(
       CurvedAnimation(
         parent: _controller,
         curve: Curves.easeInOut,
       ),
     );
 
-    var height = heightSize.value*10*(minutes - stopwatch.elapsed.inMinutes - 1)/minutes;
+    var height = heightSize.value *
+        10 *
+        (minutes - stopwatch.elapsed.inMinutes - 1) /
+        minutes;
 
-    Size size = new Size(
-        MediaQuery.of(context).size.width,
-        height
-    );
+    Size size = new Size(MediaQuery.of(context).size.width, height);
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
@@ -115,8 +114,8 @@ class _TimerPageState extends State<TimerPage>
             animation: _controller,
             builder: (context, child) {
               return DemoBody(
-                  size: size,
-                  color: Theme.of(context).primaryColor,
+                size: size,
+                color: Theme.of(context).primaryColor,
               );
             },
           ),

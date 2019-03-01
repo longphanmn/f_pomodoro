@@ -12,7 +12,11 @@ class DemoBody extends StatefulWidget {
   final Color color;
 
   DemoBody(
-      {Key key, @required this.size, this.xOffset = 0, this.yOffset = 0, this.color})
+      {Key key,
+      @required this.size,
+      this.xOffset = 0,
+      this.yOffset = 0,
+      this.color})
       : super(key: key);
 
   @override
@@ -35,14 +39,14 @@ class _DemoBodyState extends State<DemoBody> with TickerProviderStateMixin {
     animationController.addListener(() {
       animList1.clear();
       for (int i = -2 - widget.xOffset;
-      i <= widget.size.width.toInt() + 2;
-      i++) {
+          i <= widget.size.width.toInt() + 2;
+          i++) {
         animList1.add(new Offset(
             i.toDouble() + widget.xOffset,
             sin((animationController.value * 360 - i) %
-                360 *
-                Vector.degrees2Radians) *
-                10 +
+                        360 *
+                        Vector.degrees2Radians) *
+                    10 +
                 30 +
                 widget.yOffset));
       }
@@ -66,13 +70,13 @@ class _DemoBodyState extends State<DemoBody> with TickerProviderStateMixin {
           curve: Curves.easeInOut,
         ),
         builder: (context, child) => new ClipPath(
-          child: new Container(
-            width: widget.size.width,
-            height: widget.size.height,
-            color: widget.color,
-          ),
-          clipper: new WaveClipper(animationController.value, animList1),
-        ),
+              child: new Container(
+                width: widget.size.width,
+                height: widget.size.height,
+                color: widget.color,
+              ),
+              clipper: new WaveClipper(animationController.value, animList1),
+            ),
       ),
     );
   }
