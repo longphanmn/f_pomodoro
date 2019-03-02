@@ -64,14 +64,11 @@ class DatabaseUtil {
   remove(Task task) async {
     var db = await database;
 
-    var raw = await db.rawUpdate(
-        'DELETE FROM Task WHERE id = ?',
-        [ task.id]);
+    var raw = await db.rawUpdate('DELETE FROM Task WHERE id = ?', [task.id]);
 
     print('Removed');
     return raw;
   }
-
 
   Future<List<Task>> getAll() async {
     var db = await database;

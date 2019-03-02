@@ -158,19 +158,23 @@ class _HomePageState extends State<HomePage> {
                     shrinkWrap: true,
                     itemBuilder: (BuildContext context, int index) {
                       var item = tasks.elementAt(index);
-                      return Material(
-                          child: InkWell(
-                        child: TaskWidget(task: item,
-                        onRemoved: () async {
-                          await taskManager.loadAllTasks();
-                          setState(() {
-                            print("Reload");
-                          });
-                        },),
-                        onTap: () {
-                          _startTimer(item);
-                        },
-                      ));
+                      return Hero(
+                          tag: 'task-${item.id}',
+                          child: Material(
+                              child: InkWell(
+                            child: TaskWidget(
+                              task: item,
+                              onRemoved: () async {
+                                await taskManager.loadAllTasks();
+                                setState(() {
+                                  print("Reload");
+                                });
+                              },
+                            ),
+                            onTap: () {
+                              _startTimer(item);
+                            },
+                          )));
                     },
                   );
                 }
@@ -219,13 +223,15 @@ class _TaskWidgetState extends State<TaskWidget> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          Text(
-                            task.title,
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
+                          Hero(
+                              tag: 'text-${task.id}',
+                              child: Text(
+                                task.title,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              )),
                           Text(
                             task.description,
                             style: TextStyle(
@@ -245,14 +251,10 @@ class _TaskWidgetState extends State<TaskWidget> {
             color: Colors.blue,
             icon: Icons.archive,
             onTap: () async {
-              Task nTask = task
-              ..done = true;
+              Task nTask = task..done = true;
               await Manager().updateTask(nTask);
-              setState(() {
-                
-              });
-            }
-        ),
+              setState(() {});
+            }),
       ],
       secondaryActions: <Widget>[
         new IconSlideAction(

@@ -104,107 +104,113 @@ class _TimerPageState extends State<TimerPage>
         new Size(MediaQuery.of(context).size.width, heightSize.value * 0.9);
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Stack(
-        children: <Widget>[
-          AnimatedBuilder(
-            animation: _controller,
-            builder: (context, child) {
-              return DemoBody(
-                size: size,
-                color: Theme.of(context).primaryColor,
-              );
-            },
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 32.0, left: 4.0, right: 4.0),
-            child: Row(
-              children: <Widget>[
-                IconButton(
-                    icon: Icon(
-                      Icons.arrow_back,
-                      size: 40.0,
-                      color: Colors.grey,
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    }),
-                Spacer(),
-                IconButton(
-                  icon: Icon(
-                    Icons.done_all,
-                    size: 32.0,
+        body: Material(
+          child: Stack(
+            children: <Widget>[
+              AnimatedBuilder(
+                animation: _controller,
+                builder: (context, child) {
+                  return DemoBody(
+                    size: size,
                     color: Theme.of(context).primaryColor,
-                  ),
-                  onPressed: () {
-                    Task task = getTask();
-                    task.done = true;
-                    Navigator.of(context).pop(task);
-                  },
-                ),
-              ],
-            ),
-          ),
-          Align(
-            alignment: Alignment.topCenter,
-            child: Container(
-              margin: EdgeInsets.only(top: 100),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Text(
-                    widget.task.title,
-                    style: TextStyle(fontSize: 30.0, color: Colors.grey),
-                  ),
-                  Text(
-                    widget.task.description,
-                    style: TextStyle(color: Colors.grey),
-                  ),
-                ],
+                  );
+                },
               ),
-            ),
-          ),
-          Align(
-            alignment: Alignment.center,
-            child: Container(
-              margin: EdgeInsets.only(bottom: 100),
-              child: Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
+              Padding(
+                padding:
+                    const EdgeInsets.only(top: 32.0, left: 4.0, right: 4.0),
+                child: Row(
                   children: <Widget>[
-                    Text(
-                      timeText,
-                      style: TextStyle(
-                          fontSize: 54.0,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold),
+                    IconButton(
+                        icon: Icon(
+                          Icons.arrow_back,
+                          size: 40.0,
+                          color: Colors.grey,
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        }),
+                    Spacer(),
+                    IconButton(
+                      icon: Icon(
+                        Icons.done_all,
+                        size: 32.0,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                      onPressed: () {
+                        Task task = getTask();
+                        task.done = true;
+                        Navigator.of(context).pop(task);
+                      },
                     ),
                   ],
                 ),
               ),
-            ),
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              margin: EdgeInsets.only(bottom: 32),
-              child: GestureDetector(
-                  child: RoundedButton(text: buttonText),
-                  onTap: () {
-                    if (stopwatch.isRunning) {
-                      stopwatch.stop();
-                      _controller.stop(canceled: false);
-                    } else {
-                      begin = 50.0;
-                      stopwatch.start();
-                      _controller.forward();
-                    }
+              Align(
+                alignment: Alignment.topCenter,
+                child: Container(
+                  margin: EdgeInsets.only(top: 100),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Hero(
+                        tag: 'text-${widget.task.id}',
+                        child: Text(
+                          widget.task.title,
+                          style: TextStyle(fontSize: 30.0, color: Colors.grey),
+                        ),
+                      ),
+                      Text(
+                        widget.task.description,
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.center,
+                child: Container(
+                  margin: EdgeInsets.only(bottom: 100),
+                  child: Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Text(
+                          timeText,
+                          style: TextStyle(
+                              fontSize: 54.0,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  margin: EdgeInsets.only(bottom: 32),
+                  child: GestureDetector(
+                      child: RoundedButton(text: buttonText),
+                      onTap: () {
+                        if (stopwatch.isRunning) {
+                          stopwatch.stop();
+                          _controller.stop(canceled: false);
+                        } else {
+                          begin = 50.0;
+                          stopwatch.start();
+                          _controller.forward();
+                        }
 
-                    updateClock();
-                  }),
-            ),
-          )
-        ],
-      ),
+                        updateClock();
+                      }),
+                ),
+              )
+            ],
+          ),
+        ),
     );
   }
 }
