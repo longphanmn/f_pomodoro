@@ -1,9 +1,13 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'package:fpomodoro/pages/new_task.dart';
 import 'package:fpomodoro/models/task.dart';
 import 'package:fpomodoro/utils/manager.dart';
 import 'package:fpomodoro/pages/timer.dart';
+
+import 'package:highlighter_coachmark/highlighter_coachmark.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -16,11 +20,13 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   Manager taskManager = Manager();
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  GlobalKey _fabKey = GlobalObjectKey("fab");
 
   @override
   void initState() {
     super.initState();
     taskManager.loadAllTasks();
+    Timer(Duration(seconds: 1), () => showCoachMarkFAB());
   }
 
   void _startTimer(Task task) async {
@@ -57,11 +63,42 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  void showCoachMarkFAB() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getBool('fab') != null && prefs.getBool('fab')){
+      return;
+    }
+    CoachMark coachMarkFAB = CoachMark();
+    RenderBox target = _fabKey.currentContext.findRenderObject();
+
+    Rect markRect = target.localToGlobal(Offset.zero) & target.size;
+    markRect = Rect.fromCircle(
+        center: markRect.center, radius: markRect.longestSide * 0.6);
+
+    coachMarkFAB.show(
+        targetContext: _fabKey.currentContext,
+        markRect: markRect,
+        children: [
+          Center(
+              child: Text("Tap on button\nto add a tasks",
+                  style: const TextStyle(
+                    fontSize: 24.0,
+                    fontStyle: FontStyle.italic,
+                    color: Colors.white,
+                  )))
+        ],
+        duration: null,
+        onClose: () {
+           prefs.setBool('fab', true);
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
       floatingActionButton: FloatingActionButton(
+        key: _fabKey,
         onPressed: () {
           _addTask();
         },
