@@ -8,6 +8,7 @@ import 'package:fpomodoro/pages/timer.dart';
 
 import 'package:highlighter_coachmark/highlighter_coachmark.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -159,7 +160,13 @@ class _HomePageState extends State<HomePage> {
                       var item = tasks.elementAt(index);
                       return Material(
                           child: InkWell(
-                        child: new TaskWidget(task: item),
+                        child: TaskWidget(task: item,
+                        onRemoved: () async {
+                          await taskManager.loadAllTasks();
+                          setState(() {
+                            print("Reload");
+                          });
+                        },),
                         onTap: () {
                           _startTimer(item);
                         },
@@ -174,48 +181,90 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class TaskWidget extends StatelessWidget {
-  TaskWidget({Key key, this.task}) : super(key: key);
+class TaskWidget extends StatefulWidget {
   final Task task;
+  final VoidCallback onRemoved;
 
+  TaskWidget({Key key, this.task, this.onRemoved}) : super(key: key);
+
+  _TaskWidgetState createState() => _TaskWidgetState();
+}
+
+class _TaskWidgetState extends State<TaskWidget> {
   @override
   Widget build(BuildContext context) {
-    return Card(
-        margin: const EdgeInsets.fromLTRB(4, 4, 4, 4),
-        child: Container(
-            height: 56.0,
-            margin: const EdgeInsets.fromLTRB(16, 4, 16, 4),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Icon(
-                  task.done ? Icons.check_circle : Icons.check_circle_outline,
-                  color: task.done ? Colors.green : Colors.red,
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 8),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        task.title,
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
+    final task = widget.task;
+    return Slidable(
+      delegate: new SlidableDrawerDelegate(),
+      actionExtentRatio: 0.25,
+      child: Container(
+        color: Colors.white,
+        child: Card(
+            margin: const EdgeInsets.fromLTRB(4, 4, 4, 4),
+            child: Container(
+                height: 56.0,
+                margin: const EdgeInsets.fromLTRB(16, 4, 16, 4),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Icon(
+                      task.done
+                          ? Icons.check_circle
+                          : Icons.check_circle_outline,
+                      color: task.done ? Colors.green : Colors.red,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 8),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            task.title,
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            task.description,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        ],
                       ),
-                      Text(
-                        task.description,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.normal,
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            )));
+                    )
+                  ],
+                ))),
+      ),
+      actions: <Widget>[
+        IconSlideAction(
+            caption: 'Done',
+            color: Colors.blue,
+            icon: Icons.archive,
+            onTap: () async {
+              Task nTask = task
+              ..done = true;
+              await Manager().updateTask(nTask);
+              setState(() {
+                
+              });
+            }
+        ),
+      ],
+      secondaryActions: <Widget>[
+        new IconSlideAction(
+          caption: 'Delete',
+          color: Colors.red,
+          icon: Icons.delete,
+          onTap: () async {
+            await Manager().removeTask(task);
+            widget.onRemoved();
+          },
+        ),
+      ],
+    );
   }
 }

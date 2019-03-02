@@ -12,6 +12,10 @@ class Manager {
     await DatabaseUtil.db.update(task);
   }
 
+  removeTask(Task task) async {
+    await DatabaseUtil.db.remove(task);
+  }
+
   loadAllTasks() {
     tasksData = DatabaseUtil.db.getAll();
   }
