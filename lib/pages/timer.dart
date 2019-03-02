@@ -91,7 +91,6 @@ class _TimerPageState extends State<TimerPage>
 
   @override
   Widget build(BuildContext context) {
-
     heightSize =
         new Tween(begin: begin, end: MediaQuery.of(context).size.height - 65)
             .animate(
@@ -101,7 +100,8 @@ class _TimerPageState extends State<TimerPage>
       ),
     );
 
-    Size size = new Size(MediaQuery.of(context).size.width, heightSize.value*0.9);
+    Size size =
+        new Size(MediaQuery.of(context).size.width, heightSize.value * 0.9);
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
@@ -227,7 +227,8 @@ class _RoundedButtonState extends State<RoundedButton> {
           color: Color.fromRGBO(220, 220, 220, 220),
           borderRadius: BorderRadius.circular(100.0),
           boxShadow: <BoxShadow>[
-            BoxShadow(color: Color.fromRGBO(220, 220, 220, 220), blurRadius: 0.0)
+            BoxShadow(
+                color: Color.fromRGBO(220, 220, 220, 220), blurRadius: 0.0)
           ]),
       child: Center(
         child: Text(

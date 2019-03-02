@@ -12,15 +12,6 @@ import 'package:fpomodoro/main.dart';
 
 void main() {
   testWidgets('Home page test', (WidgetTester tester) async {
-    await tester.pumpWidget(MyApp());
-//
-//    // Verify that our counter starts at 0.
-    expect(find.text('To-do'), findsOneWidget);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-//    expect(find.text('1'), findsNothing);
   });
 }

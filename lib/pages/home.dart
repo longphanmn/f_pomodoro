@@ -63,9 +63,9 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  void showCoachMarkFAB() async{
+  void showCoachMarkFAB() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (prefs.getBool('fab') != null && prefs.getBool('fab')){
+    if (prefs.getBool('fab') != null && prefs.getBool('fab')) {
       return;
     }
     CoachMark coachMarkFAB = CoachMark();
@@ -89,7 +89,7 @@ class _HomePageState extends State<HomePage> {
         ],
         duration: null,
         onClose: () {
-           prefs.setBool('fab', true);
+          prefs.setBool('fab', true);
         });
   }
 
