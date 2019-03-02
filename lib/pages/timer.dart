@@ -37,7 +37,8 @@ class _TimerPageState extends State<TimerPage>
   void updateClock() {
     if (stopwatch.elapsed.inMinutes == minutes) {
       if (Navigator.canPop(context)) {
-        Navigator.of(context).pop(getTask());
+        Navigator.of(context).pop(getTask()
+        ..pomCount = getTask().pomCount + 1);
       }
       return;
     }
@@ -128,7 +129,13 @@ class _TimerPageState extends State<TimerPage>
                           color: Colors.grey,
                         ),
                         onPressed: () {
-                          Navigator.of(context).pop();
+                          if (stopwatch.elapsed.inMinutes > 0){
+                            Navigator.of(context).pop(getTask()
+                            ..pomCount = getTask().pomCount + 1);
+                          } else {
+                            Navigator.of(context).pop();
+                          }
+
                         }),
                     Spacer(),
                     IconButton(
@@ -138,8 +145,10 @@ class _TimerPageState extends State<TimerPage>
                         color: Theme.of(context).primaryColor,
                       ),
                       onPressed: () {
-                        Task task = getTask();
-                        task.done = true;
+                        final task = getTask()
+                          ..done = true
+                          ..pomCount = getTask().pomCount + 1;
+  
                         Navigator.of(context).pop(task);
                       },
                     ),

@@ -51,7 +51,7 @@ class _NewTaskPageState extends State<NewTaskPage> {
           color: Theme.of(context).primaryColor,
         ));
     return Scaffold(
-        body: new Material(
+      body: new Material(
       color: Colors.white,
       child: Stack(
         children: <Widget>[

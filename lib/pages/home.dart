@@ -39,10 +39,11 @@ class _HomePageState extends State<HomePage> {
               )),
     );
     if (result != null) {
+      print(result.done);
       await Manager().updateTask(result);
       await taskManager.loadAllTasks();
       setState(() {
-        final snackBar = SnackBar(content: Text('Finished: ${result.title}'));
+        final snackBar = SnackBar(content: Text('Updated: ${result.title}'));
         _scaffoldKey.currentState.showSnackBar(snackBar);
       });
     }
@@ -206,7 +207,7 @@ class _TaskWidgetState extends State<TaskWidget> {
         child: Card(
             margin: const EdgeInsets.fromLTRB(4, 4, 4, 4),
             child: Container(
-                height: 56.0,
+                height: 72.0,
                 margin: const EdgeInsets.fromLTRB(16, 4, 16, 4),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -235,6 +236,13 @@ class _TaskWidgetState extends State<TaskWidget> {
                               )),
                           Text(
                             task.description,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                          Text(
+                            "${task.pomCount} pomodoro",
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.normal,
