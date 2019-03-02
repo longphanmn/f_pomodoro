@@ -154,6 +154,7 @@ class _TimerPageState extends State<TimerPage>
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       Hero(
+                        transitionOnUserGestures: true,
                         tag: 'text-${widget.task.id}',
                         child: Text(
                           widget.task.title,

@@ -224,6 +224,7 @@ class _TaskWidgetState extends State<TaskWidget> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Hero(
+                              transitionOnUserGestures: true,
                               tag: 'text-${task.id}',
                               child: Text(
                                 task.title,
