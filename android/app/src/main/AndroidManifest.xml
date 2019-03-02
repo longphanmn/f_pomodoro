@@ -14,7 +14,7 @@
          FlutterApplication and put your custom class here. -->
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="fpomodoro"
+        android:label="F-Pomodoro"
         android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"

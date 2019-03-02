@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.red,
       ),
-      home: HomePage(title: 'To-do'),
+      home: HomePage(title: 'F-Pomodoro'),
     );
   }
 }

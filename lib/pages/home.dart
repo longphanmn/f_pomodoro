@@ -147,7 +147,7 @@ class _HomePageState extends State<HomePage> {
                 if (tasks != null && tasks.length == 0) {
                   return Center(
                     child: Text(
-                      'No Tasks!',
+                      'Cool! Nothing to do.',
                       style: TextStyle(fontSize: 24),
                     ),
                   );
