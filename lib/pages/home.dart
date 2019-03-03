@@ -22,12 +22,18 @@ class _HomePageState extends State<HomePage> {
   Manager taskManager = Manager();
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   GlobalKey _fabKey = GlobalObjectKey("fab");
+  GlobalKey _itemKey = GlobalObjectKey("item");
 
   @override
   void initState() {
     super.initState();
     taskManager.loadAllTasks();
     Timer(Duration(seconds: 1), () => showCoachMarkFAB());
+  }
+
+  void _showSnackBar(String msg){
+    final snackBar = SnackBar(content: Text(msg));
+    _scaffoldKey.currentState.showSnackBar(snackBar);
   }
 
   void _startTimer(Task task) async {
@@ -43,8 +49,7 @@ class _HomePageState extends State<HomePage> {
       await Manager().updateTask(result);
       await taskManager.loadAllTasks();
       setState(() {
-        final snackBar = SnackBar(content: Text('Updated: ${result.title}'));
-        _scaffoldKey.currentState.showSnackBar(snackBar);
+        _showSnackBar('Updated: ${result.title}');
       });
     }
   }
@@ -59,17 +64,13 @@ class _HomePageState extends State<HomePage> {
       await Manager().addNewTask(task);
       await taskManager.loadAllTasks();
       setState(() {
-        final snackBar = SnackBar(content: Text('Added: ${task.title}'));
-        _scaffoldKey.currentState.showSnackBar(snackBar);
+        _showSnackBar('Added: ${task.title}');
       });
     }
   }
 
   void showCoachMarkFAB() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (prefs.getBool('fab') != null && prefs.getBool('fab')) {
-      return;
-    }
     CoachMark coachMarkFAB = CoachMark();
     RenderBox target = _fabKey.currentContext.findRenderObject();
 
@@ -95,8 +96,40 @@ class _HomePageState extends State<HomePage> {
         });
   }
 
+  void showCoachMarkItem() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (_itemKey == null || _itemKey.currentContext == null || (prefs.getBool('item') != null && prefs.getBool('item'))) {
+      return;
+    }
+    CoachMark coachMarkFAB = CoachMark();
+
+    RenderBox target = _itemKey.currentContext.findRenderObject();
+
+    Rect markRect = target.localToGlobal(Offset.zero) & target.size;
+    markRect = markRect.inflate(5.0);
+
+    coachMarkFAB.show(
+        targetContext: _itemKey.currentContext,
+        markRect: markRect,
+        markShape: BoxShape.rectangle,
+        children: [
+          Center(
+              child: Text("Select to start task\nSlide to delete or archive.",
+                  style: const TextStyle(
+                    fontSize: 24.0,
+                    fontStyle: FontStyle.italic,
+                    color: Colors.white,
+                  )))
+        ],
+        duration: null,
+        onClose: () {
+          prefs.setBool('item', true);
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
+    Timer(Duration(seconds: 1), () => showCoachMarkItem());
     return Scaffold(
       key: _scaffoldKey,
       floatingActionButton: FloatingActionButton(
@@ -161,14 +194,22 @@ class _HomePageState extends State<HomePage> {
                       var item = tasks.elementAt(index);
                       return Hero(
                           tag: 'task-${item.id}',
+                          
                           child: Material(
-                              child: InkWell(
+                            key: index == 0 ? _itemKey : null,
+                            child: InkWell(
                             child: TaskWidget(
                               task: item,
                               onRemoved: () async {
                                 await taskManager.loadAllTasks();
                                 setState(() {
-                                  print("Reload");
+                                  _showSnackBar('Removed: ${item.title}');
+                                });
+                              },
+                              onUpdated: () async {
+                                await taskManager.loadAllTasks();
+                                setState(() {
+                                  _showSnackBar('Updated: ${item.title}');
                                 });
                               },
                             ),
@@ -189,8 +230,9 @@ class _HomePageState extends State<HomePage> {
 class TaskWidget extends StatefulWidget {
   final Task task;
   final VoidCallback onRemoved;
+  final VoidCallback onUpdated;
 
-  TaskWidget({Key key, this.task, this.onRemoved}) : super(key: key);
+  TaskWidget({Key key, this.task, this.onRemoved, this.onUpdated}) : super(key: key);
 
   _TaskWidgetState createState() => _TaskWidgetState();
 }
@@ -255,26 +297,29 @@ class _TaskWidgetState extends State<TaskWidget> {
                 ))),
       ),
       actions: <Widget>[
-        IconSlideAction(
-            caption: 'Done',
-            color: Colors.blue,
-            icon: Icons.archive,
-            onTap: () async {
+        IconButton(
+            icon: Icon(
+              Icons.archive,
+              size: 32.0,
+              color: Colors.blue,
+            ),
+            onPressed: () async {
               Task nTask = task..done = true;
               await Manager().updateTask(nTask);
-              setState(() {});
+              widget.onUpdated();
             }),
       ],
       secondaryActions: <Widget>[
-        new IconSlideAction(
-          caption: 'Delete',
-          color: Colors.red,
-          icon: Icons.delete,
-          onTap: () async {
-            await Manager().removeTask(task);
-            widget.onRemoved();
-          },
-        ),
+        IconButton(
+            icon: Icon(
+              Icons.delete,
+              size: 32.0,
+              color: Colors.red,
+            ),
+            onPressed: () async {
+              await Manager().removeTask(task);
+              widget.onRemoved();
+            }),
       ],
     );
   }

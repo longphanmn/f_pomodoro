@@ -56,7 +56,13 @@ class DatabaseUtil {
 
     var raw = await db.rawUpdate(
         'UPDATE Task SET title = ?, description = ?, done = ?, pomCount = ? WHERE id = ?',
-        [task.title, task.description, task.done ? 1 : 0, task.pomCount , task.id]);
+        [
+          task.title,
+          task.description,
+          task.done ? 1 : 0,
+          task.pomCount,
+          task.id
+        ]);
 
     print('Updated');
     return raw;
