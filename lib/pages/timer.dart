@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:screen/screen.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
@@ -33,6 +34,9 @@ class _TimerPageState extends State<TimerPage>
   var begin = 0.0;
   Animation<double> heightSize;
   AnimationController _controller;
+
+  double brightness = 0.5;
+  bool isKeptOn = false;
 
   void updateClock() {
     if (stopwatch.elapsed.inMinutes == minutes) {
@@ -78,11 +82,23 @@ class _TimerPageState extends State<TimerPage>
       print('-----animation state: $state');
     });
 
+    _keepScreenAwake();
+
     timer = Timer.periodic(delay, (Timer t) => updateClock());
+  }
+
+  void _keepScreenAwake() async {
+    brightness = await Screen.brightness;
+    isKeptOn = await Screen.isKeptOn;
+
+    Screen.setBrightness(0.3);
+    Screen.keepOn(true);
   }
 
   @override
   void dispose() {
+    Screen.setBrightness(brightness);
+    Screen.keepOn(isKeptOn);
     _controller.dispose();
     stopwatch.stop();
     timer.cancel();

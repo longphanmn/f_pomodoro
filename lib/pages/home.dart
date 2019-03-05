@@ -71,6 +71,11 @@ class _HomePageState extends State<HomePage> {
 
   void showCoachMarkFAB() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    final fabCoach = prefs.getBool('fab') ?? false;
+    if (fabCoach){
+      return;
+    }
+
     CoachMark coachMarkFAB = CoachMark();
     RenderBox target = _fabKey.currentContext.findRenderObject();
 
@@ -98,7 +103,8 @@ class _HomePageState extends State<HomePage> {
 
   void showCoachMarkItem() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (_itemKey == null || _itemKey.currentContext == null || (prefs.getBool('item') != null && prefs.getBool('item'))) {
+    final itemCoach = prefs.getBool('item') ?? false;
+    if (_itemKey == null || _itemKey.currentContext == null || itemCoach) {
       return;
     }
     CoachMark coachMarkFAB = CoachMark();
@@ -122,8 +128,8 @@ class _HomePageState extends State<HomePage> {
                   )))
         ],
         duration: null,
-        onClose: () {
-          prefs.setBool('item', true);
+        onClose: () async {
+          await prefs.setBool('item', true);
         });
   }
 

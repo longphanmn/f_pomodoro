@@ -12,4 +12,4 @@ Simple Pomodoro Timer written in Flutter 1.2.
 * After timer started, screen will be filled with the wave.
 * Swipe to delete or mark a task as done from home screen.
 
-TODO: screen wakelock, dim screen (to save battery)
+TODO: add coach to Timer Screen, refresh list with animation
