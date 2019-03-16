@@ -31,7 +31,7 @@ class _HomePageState extends State<HomePage> {
     Timer(Duration(seconds: 1), () => showCoachMarkFAB());
   }
 
-  void _showSnackBar(String msg){
+  void _showSnackBar(String msg) {
     final snackBar = SnackBar(content: Text(msg));
     _scaffoldKey.currentState.showSnackBar(snackBar);
   }
@@ -45,7 +45,6 @@ class _HomePageState extends State<HomePage> {
               )),
     );
     if (result != null) {
-      print(result.done);
       await Manager().updateTask(result);
       await taskManager.loadAllTasks();
       setState(() {
@@ -72,7 +71,7 @@ class _HomePageState extends State<HomePage> {
   void showCoachMarkFAB() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final fabCoach = prefs.getBool('fab') ?? false;
-    if (fabCoach){
+    if (fabCoach) {
       return;
     }
 
@@ -175,7 +174,6 @@ class _HomePageState extends State<HomePage> {
               builder:
                   (BuildContext context, AsyncSnapshot<List<Task>> snapshot) {
                 var tasks = snapshot.data.reversed;
-                print('Count: ${tasks.length}');
 
                 if (snapshot.connectionState != ConnectionState.done) {
                   return Center(
@@ -200,29 +198,28 @@ class _HomePageState extends State<HomePage> {
                       var item = tasks.elementAt(index);
                       return Hero(
                           tag: 'task-${item.id}',
-                          
                           child: Material(
-                            key: index == 0 ? _itemKey : null,
-                            child: InkWell(
-                            child: TaskWidget(
-                              task: item,
-                              onRemoved: () async {
-                                await taskManager.loadAllTasks();
-                                setState(() {
-                                  _showSnackBar('Removed: ${item.title}');
-                                });
-                              },
-                              onUpdated: () async {
-                                await taskManager.loadAllTasks();
-                                setState(() {
-                                  _showSnackBar('Updated: ${item.title}');
-                                });
-                              },
-                            ),
-                            onTap: () {
-                              _startTimer(item);
-                            },
-                          )));
+                              key: index == 0 ? _itemKey : null,
+                              child: InkWell(
+                                child: TaskWidget(
+                                  task: item,
+                                  onRemoved: () async {
+                                    await taskManager.loadAllTasks();
+                                    setState(() {
+                                      _showSnackBar('Removed: ${item.title}');
+                                    });
+                                  },
+                                  onUpdated: () async {
+                                    await taskManager.loadAllTasks();
+                                    setState(() {
+                                      _showSnackBar('Updated: ${item.title}');
+                                    });
+                                  },
+                                  onTap: () {
+                                    _startTimer(item);
+                                  },
+                                ),
+                              )));
                     },
                   );
                 }
@@ -237,8 +234,10 @@ class TaskWidget extends StatefulWidget {
   final Task task;
   final VoidCallback onRemoved;
   final VoidCallback onUpdated;
+  final VoidCallback onTap;
 
-  TaskWidget({Key key, this.task, this.onRemoved, this.onUpdated}) : super(key: key);
+  TaskWidget({Key key, this.task, this.onRemoved, this.onUpdated, this.onTap})
+      : super(key: key);
 
   _TaskWidgetState createState() => _TaskWidgetState();
 }
@@ -252,55 +251,60 @@ class _TaskWidgetState extends State<TaskWidget> {
       actionExtentRatio: 0.25,
       child: Container(
         color: Colors.white,
-        child: Card(
-            margin: const EdgeInsets.fromLTRB(4, 4, 4, 4),
-            child: Container(
-                height: 72.0,
-                margin: const EdgeInsets.fromLTRB(16, 4, 16, 4),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Icon(
-                      task.done
-                          ? Icons.check_circle
-                          : Icons.check_circle_outline,
-                      color: task.done ? Colors.green : Colors.red,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 8),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Hero(
-                              transitionOnUserGestures: true,
-                              tag: 'text-${task.id}',
-                              child: Text(
-                                task.title,
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              )),
-                          Text(
-                            task.description,
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.normal,
+        child: Material(
+            child: Card(
+                margin: const EdgeInsets.fromLTRB(4, 4, 4, 4),
+                child: InkWell(
+                    onTap: () {
+                      widget.onTap();
+                    },
+                    child: Container(
+                        height: 72.0,
+                        margin: const EdgeInsets.fromLTRB(16, 4, 16, 4),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Icon(
+                              task.done
+                                  ? Icons.check_circle
+                                  : Icons.check_circle_outline,
+                              color: task.done ? Colors.green : Colors.red,
                             ),
-                          ),
-                          Text(
-                            "${task.pomCount} pomodoro",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.normal,
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ))),
+                            Padding(
+                              padding: EdgeInsets.only(left: 8),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Hero(
+                                      transitionOnUserGestures: true,
+                                      tag: 'text-${task.id}',
+                                      child: Text(
+                                        task.title,
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      )),
+                                  Text(
+                                    task.description,
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.normal,
+                                    ),
+                                  ),
+                                  Text(
+                                    "${task.pomCount} pomodoro",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.normal,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ))))),
       ),
       actions: <Widget>[
         IconButton(
